@@ -44,7 +44,7 @@ function rand_pwd(){
       echo "INFO: Password does not Match the criteria, re-generating..." >&2
     fi
   done
-  echo "${s}" 
+  echo "${s}"
 }
 
 #==================================================
@@ -62,7 +62,7 @@ setupRCU() {
     sed -e "s/^@@prepareAuditView.sql/-- @@prepareAuditView.sql/g" ${scrName}.orig > ${scrName}
   else
     echo "INFO: Setting RCU for ORCL"
-    cp ${scrName}.orig ${scrName}    
+    cp ${scrName}.orig ${scrName}
   fi
 }
 
@@ -132,10 +132,10 @@ CTR_DIR=/$vol_name/oracle/user_projects/container/${DOMAIN_NAME}
 RUN_RCU="true"
 CONFIGURE_DOMAIN="true"
 
-if [ -d  $CTR_DIR ] 
+if [ -d  $CTR_DIR ]
 then
-  # First load the Env Data from the env file... 
-  if [ -e $CTR_DIR/contenv.sh ] 
+  # First load the Env Data from the env file...
+  if [ -e $CTR_DIR/contenv.sh ]
   then
     . $CTR_DIR/contenv.sh
     #reset the JDBC URL
@@ -145,7 +145,7 @@ else
   mkdir -p $CTR_DIR
 fi
 
-if [ -e $CTR_DIR/RCU.$RCUPREFIX.suc ] 
+if [ -e $CTR_DIR/RCU.$RCUPREFIX.suc ]
 then
     #RCU has already been executed successfully, no need to rerun
     RUN_RCU="false"
@@ -154,7 +154,7 @@ fi
 
 RUN_RCU="false"
 
-if [ "$RUN_RCU" = "true" ] 
+if [ "$RUN_RCU" = "true" ]
 then
   setupRCU
   # Run the RCU.. it hasnt been loaded before. If it has
@@ -162,20 +162,20 @@ then
   # scenario
   echo "INFO: Dropping Schema $RCUPREFIX..."
   /$vol_name/oracle/oracle_common/bin/rcu -silent -dropRepository -databaseType ORACLE -connectString $CONNECTION_STRING -dbUser sys -dbRole sysdba -selectDependentsForComponents true -schemaPrefix $RCUPREFIX -component OPSS -component STB -component SOAINFRA -f < /tmp/pwd.txt
-	
+
   echo "INFO: Creating Schema $RCUPREFIX..."
   /$vol_name/oracle/oracle_common/bin/rcu -silent -createRepository -databaseType ORACLE -connectString $CONNECTION_STRING -dbUser sys -dbRole sysdba -useSamePasswordForAllSchemaUsers true -selectDependentsForComponents true -variables SOA_PROFILE_TYPE=SMALL,HEALTHCARE_INTEGRATION=NO -schemaPrefix $RCUPREFIX -component OPSS -component STB -component SOAINFRA -f < /tmp/pwd.txt
   retval=$?
 
-  if [ $retval -ne 0 ]; 
+  if [ $retval -ne 0 ];
   then
     echo "ERROR: RCU Loading Failed. Check the RCU logs"
     exit
   else
-    # Write the rcu suc file... 
+    # Write the rcu suc file...
     touch $CTR_DIR/RCU.$RCUPREFIX.suc
-    	
-    # Write the env file.. such that the passwords etc.. will be saved and we will 
+
+    # Write the env file.. such that the passwords etc.. will be saved and we will
     # be able to restart from the RCU
     cat > $CTR_DIR/contenv.sh <<EOF
 CONNECTION_STRING=$CONNECTION_STRING
@@ -189,29 +189,55 @@ EOF
 fi
 
 rm -f "/tmp/pwd.txt"
-    
+
 #
 # Configuration of SOA domain
 #=============================
-if [ -e $CTR_DIR/SOA.DOMAINCFG.suc ] 
-then
-  CONFIGURE_DOMAIN="false"
-  echo "INFO: Domain Already configured. Skipping..."
-fi
+#if [ -e $CTR_DIR/SOA.DOMAINCFG.suc ]
+#then
+#  CONFIGURE_DOMAIN="false"
+#  echo "INFO: Domain Already configured. Skipping..."
+#fi
 
-if [ "$CONFIGURE_DOMAIN" = "true" ] 
+# Force variable values
+export USER=weblogic
+export PASS=soaspikeWelcome123
+export DB_SCHEMA_PASS=soaspikeWelcome123
+export DOMAIN_ROOT=${DOMAIN_ROOT:-/u01/oracle/user_projects/domains}
+export DOMAIN_HOME=${DOMAIN_ROOT}/${DOMAIN_NAME}
+export ADMIN_HOME=ccms-soa-admin.dev.legalservices.gov.uk
+
+# Print our all of the variable values to stdout
+echo oh = ${ORACLE_HOME}
+echo jh= ${JAVA_HOME}
+echo dr = ${DOMAIN_ROOT}
+echo dn = ${DOMAIN_NAME}
+echo user = ${USER}
+echo password = ${PASS}
+echo rcuDb = ${CONNECTION_STRING}
+echo rcuPrefix = ${RCUPREFIX}
+echo db_schema_pass = ${DB_SCHEMA_PASS}
+echo alp = ${ADMIN_LISTEN_PORT}
+echo an = ${ADMIN_NAME}
+echo ape = ${ADMINISTRATION_PORT_ENABLED}
+echo ap = ${ADMINISTRATION_PORT}
+echo mn = ${MANAGED_NAME}
+echo msp = ${MANAGEDSERVER_PORT}
+echo pm = ${PRODUCTION_MODE}
+
+echo "Configuring Domain"
+if [ "$CONFIGURE_DOMAIN" = "true" ]
 then
   cfgCmd="/u01/oracle/oracle_common/common/bin/wlst.sh -skipWLSModuleScanning /u01/oracle/dockertools/createDomain.py -oh $ORACLE_HOME -jh $JAVA_HOME -parent $DOMAIN_ROOT -name $DOMAIN_NAME -password $ADMIN_PASSWORD -rcuDb $CONNECTION_STRING -rcuPrefix $RCUPREFIX -rcuSchemaPwd $DB_SCHEMA_PASSWORD -domainType $DOMAIN_TYPE"
   ${cfgCmd}
   retval=$?
-  if [ $retval -ne 0 ]; 
+  if [ $retval -ne 0 ];
   then
     echo "ERROR: Domain Configuration failed. Please check the logs"
-    sleep 1800
     exit
   else
     updateListenAddress
-    # Write the Domain suc file... 
+    # Write the Domain suc file...
     touch $CTR_DIR/SOA.DOMAINCFG.suc
     echo ${cfgCmd} >> $CTR_DIR/SOA.DOMAINCFG.suc
 
@@ -249,7 +275,7 @@ echo "password="$ADMIN_PASSWORD >> $DOMAIN_HOME/servers/${MANAGED_SERVER}/securi
 echo ". $DOMAIN_HOME/bin/setDomainEnv.sh" >> /u01/oracle/.bashrc
 echo "export PATH=$PATH:/u01/oracle/common/bin:$DOMAIN_HOME/bin" >> /u01/oracle/.bashrc
 
-# Now we start the Admin server in this container... 
+# Now we start the Admin server in this container...
 /u01/oracle/dockertools/startAS.sh
 
 sleep infinity
