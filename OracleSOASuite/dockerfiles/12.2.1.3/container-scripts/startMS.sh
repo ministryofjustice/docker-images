@@ -99,3 +99,4 @@ fi
 
 childPID=$!
 wait $childPID
+sleep infinity

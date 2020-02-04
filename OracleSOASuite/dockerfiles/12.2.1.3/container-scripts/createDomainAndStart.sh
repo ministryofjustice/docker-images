@@ -193,11 +193,11 @@ rm -f "/tmp/pwd.txt"
 #
 # Configuration of SOA domain
 #=============================
-#if [ -e $CTR_DIR/SOA.DOMAINCFG.suc ]
-#then
-#  CONFIGURE_DOMAIN="false"
-#  echo "INFO: Domain Already configured. Skipping..."
-#fi
+if [ -e $CTR_DIR/SOA.DOMAINCFG.suc ]
+then
+ CONFIGURE_DOMAIN="false"
+ echo "INFO: Domain Already configured. Skipping..."
+fi
 
 # Force variable values
 export USER=weblogic
