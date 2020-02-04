@@ -205,7 +205,7 @@ export PASS=soaspikeWelcome123
 export DB_SCHEMA_PASS=soaspikeWelcome123
 export DOMAIN_ROOT=${DOMAIN_ROOT:-/u01/oracle/user_projects/domains}
 export DOMAIN_HOME=${DOMAIN_ROOT}/${DOMAIN_NAME}
-export ADMIN_HOME=ccms-soa-admin.dev.legalservices.gov.uk
+export ADMIN_HOST=ccms-soa-admin.dev.legalservices.gov.uk
 
 # Print our all of the variable values to stdout
 echo oh = ${ORACLE_HOME}
