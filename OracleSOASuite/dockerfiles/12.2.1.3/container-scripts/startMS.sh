@@ -61,8 +61,8 @@ LOGFILE=${LOGDIR}/ms.log
 mkdir -p ${LOGDIR}
 
 export thehost=`hostname -I`
-echo "INFO: Updating the listen address - ${thehost} ${ADMIN_HOST}"
-/u01/oracle/oracle_common/common/bin/wlst.sh -skipWLSModuleScanning /u01/oracle/dockertools/updListenAddress.py $vol_name $thehost ${MANAGED_SERVER} ${ADMIN_HOST} > ${LOGDIR}/mslisten.log 2>&1
+echo "INFO: Updating the listen address - ${thehost} ${MANAGED_HOST}"
+/u01/oracle/oracle_common/common/bin/wlst.sh -skipWLSModuleScanning /u01/oracle/dockertools/updListenAddress.py $vol_name $thehost ${MANAGED_SERVER} ${MANAGED_HOST} > ${LOGDIR}/mslisten.log 2>&1
 
 # Start SOA server
 echo "INFO: Starting the managed server ${MANAGED_SERVER}"
