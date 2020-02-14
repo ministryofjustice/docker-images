@@ -276,6 +276,11 @@ echo "password="$ADMIN_PASSWORD >> $DOMAIN_HOME/servers/${MANAGED_SERVER}/securi
 echo ". $DOMAIN_HOME/bin/setDomainEnv.sh" >> /u01/oracle/.bashrc
 echo "export PATH=$PATH:/u01/oracle/common/bin:$DOMAIN_HOME/bin" >> /u01/oracle/.bashrc
 
+# Create java symlinks
+ls -l /usr/java/jdk1.8.0_211 /usr/java/latest
+ls -l /usr/java/jdk1.8.0_211 /usr/java/default
+ls -l /usr/java/jdk1.8.0_211 /usr/java/jdk-8
+
 # Now we start the Admin server in this container...
 /u01/oracle/dockertools/startAS.sh
 
