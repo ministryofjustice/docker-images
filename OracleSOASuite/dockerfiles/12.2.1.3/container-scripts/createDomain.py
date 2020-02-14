@@ -272,7 +272,9 @@ class SOA12212Provisioner:
 
     def extendSoaDomain(self, domainHome, db, dbPrefix, dbPassword):
         self.readAndApplyJRFTemplates(domainHome)
+        print 'INFO: JRFTemplates applied'
         self.applySOATemplates()
+        print 'INFO: SOA template applied'
 
         print 'INFO: Extension Templates added'
 
@@ -295,6 +297,7 @@ class SOA12212Provisioner:
         set('Target', ",".join(self.SOA_CLUSTERS))
         print 'INFO: Preparing to update domain...'
         updateDomain()
+        dumpStack()
         print 'INFO: Domain updated successfully'
         closeDomain()
         return

@@ -23,15 +23,16 @@ MAINTAINER Prashanth Nagaraja <prashanth.nagaraja@oracle.com>
 # Environment variables required for this build (do NOT change)
 # -------------------------------------------------------------
 USER root
-ENV FMW_JAR1=fmw_12.2.1.3.0_soa.jar \
-    FMW_JAR2=fmw_12.2.1.3.0_osb.jar
+ENV FMW_JAR1=fmw_12.2.1.3.0_soa.jar 
+#\
+#    FMW_JAR2=fmw_12.2.1.3.0_osb.jar
 
 #
 # Copy files and packages for install
 # -----------------------------------
 ADD  $FMW_JAR1 $FMW_JAR2 /u01/
 COPY container-scripts/* /u01/oracle/dockertools/
-RUN  yum install -y hostname &&    \
+RUN  yum install -y hostname install net-tools procps-ng curl telnet vim &&    \
      rm -rf /var/cache/yum &&      \
      cd /u01 && chmod 755 *.jar && \
      chmod a+xr /u01/oracle/dockertools/*.*
@@ -40,7 +41,7 @@ USER oracle
 COPY install/* /u01/
 RUN cd /u01 && \
   $JAVA_HOME/bin/java -jar $FMW_JAR1 -silent -responseFile /u01/soasuite.response -invPtrLoc /u01/oraInst.loc -jreLoc $JAVA_HOME -ignoreSysPrereqs -force -novalidation ORACLE_HOME=$ORACLE_HOME && \
-  $JAVA_HOME/bin/java -jar $FMW_JAR2 -silent -responseFile /u01/soasuite.response -invPtrLoc /u01/oraInst.loc -jreLoc $JAVA_HOME -ignoreSysPrereqs -force -novalidation ORACLE_HOME=$ORACLE_HOME INSTALL_TYPE="Service Bus" && \
+#  $JAVA_HOME/bin/java -jar $FMW_JAR2 -silent -responseFile /u01/soasuite.response -invPtrLoc /u01/oraInst.loc -jreLoc $JAVA_HOME -ignoreSysPrereqs -force -novalidation ORACLE_HOME=$ORACLE_HOME INSTALL_TYPE="Service Bus" && \
   rm -fr /u01/*.jar /u01/*.response /u01/*.loc
 
 #
