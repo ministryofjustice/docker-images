@@ -201,12 +201,8 @@ fi
 
 # Force variable values
 export USER=weblogic
-export PASS=soaspikeWelcome123
-export DB_SCHEMA_PASS=soaspikeWelcome123
 export DOMAIN_ROOT=${DOMAIN_ROOT:-/u01/oracle/user_projects/domains}
 export DOMAIN_HOME=${DOMAIN_ROOT}/${DOMAIN_NAME}
-export ADMIN_HOST=ccms-soa-admin.dev.legalservices.gov.uk
-export MANAGED_HOST=ccms-soa-managed.dev.legalservices.gov.uk
 
 # Print our all of the variable values to stdout
 echo oh = ${ORACLE_HOME}
@@ -225,6 +221,7 @@ echo ap = ${ADMINISTRATION_PORT}
 echo mn = ${MANAGED_NAME}
 echo msp = ${MANAGEDSERVER_PORT}
 echo pm = ${PRODUCTION_MODE}
+echo ah = ${ADMIN_HOST}
 
 echo "Configuring Domain"
 if [ "$CONFIGURE_DOMAIN" = "true" ]
