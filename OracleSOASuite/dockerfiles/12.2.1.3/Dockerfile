@@ -35,7 +35,9 @@ COPY container-scripts/* /u01/oracle/dockertools/
 RUN  yum install -y hostname install net-tools procps-ng curl telnet vim &&    \
      rm -rf /var/cache/yum &&      \
      cd /u01 && chmod 755 *.jar && \
-     chmod a+xr /u01/oracle/dockertools/*.*
+     chmod a+xr /u01/oracle/dockertools/*.* && \
+     ln -s /usr/java/jdk1.8.0_211 /usr/java/jdk-8
+
 #
 USER oracle
 COPY install/* /u01/
