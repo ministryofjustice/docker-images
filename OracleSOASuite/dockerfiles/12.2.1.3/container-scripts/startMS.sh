@@ -73,7 +73,7 @@ then
     sleep 10
   done
   echo "INFO: Script present, wait to ensure everything is created"
-  sleep 300
+  sleep 500
 fi
 
 # Start SOA server
