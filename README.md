@@ -1,3 +1,7 @@
+# LAA CCMS repo for Oracle Docker Images
+
+We have forked this repo from Oracle in order to modify and build our own images for the Dockerised SOA deployment.  This is part of the spike work to migrate CCMS to AWS.  Please see [here](https://dsdmoj.atlassian.net/wiki/spaces/CCMS/pages/1932755159/AWS+Spike+work) for more details of the migration.
+
 # Docker Images from Oracle
 This repository contains [Dockerfiles](https://docs.docker.com/engine/reference/builder/) and samples to build [Docker](https://www.docker.com/what-docker) images for Oracle commercial products and [Oracle sponsored open source projects](https://oss.oracle.com).
 
